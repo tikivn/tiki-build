@@ -15,13 +15,17 @@ class App extends Component {
     fetch("https://aws-api.tiki.vn/apps")
       .then(response => response.json())
       .then(responseJson => {
-        const mapping = builds =>
+        const mapping = (builds, iOS) =>
           builds
             .map(build => build.versions.reverse().slice(0, 3))
             .reduce((acc, value) => [...acc, ...value]);
 
         const android = mapping(responseJson["android"]);
-        const ios = mapping(responseJson["ios"]);
+        const ios = mapping(responseJson["ios"]).map(build =>
+          Object.assign({}, build, {
+            link: "itms-services://?action=download-manifest&url=" + build.link
+          })
+        );
         this.setState({ loading: false, android: android, ios: ios });
       })
       .catch(error => {
