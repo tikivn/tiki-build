@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
+import compareVersions from 'compare-versions';
 
 class App extends Component {
   constructor() {
@@ -15,9 +16,10 @@ class App extends Component {
     fetch("https://aws-api.tiki.vn/apps")
       .then(response => response.json())
       .then(responseJson => {
+        console.log(compareVersions);
         const mapping = (builds, iOS) =>
           builds
-            .map(build => build.versions.reverse().slice(0, 3))
+            .map(build => build.versions.sort((build1, build2) => compareVersions(build1.version, build2.version)).reverse().slice(0, 10))
             .reduce((acc, value) => [...acc, ...value]);
 
         const android = mapping(responseJson["android"]);
