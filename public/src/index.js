@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
 import compareVersions from 'compare-versions';
+import { parseSemVer } from 'semver-parser';
 
 class App extends Component {
   constructor() {
@@ -19,7 +20,9 @@ class App extends Component {
         console.log(compareVersions);
         const mapping = (builds, iOS) =>
           builds
-            .map(build => build.versions.sort((build1, build2) => compareVersions(build1.version, build2.version)).reverse().slice(0, 10))
+            .map(build => build.versions
+              .reverse()
+            )
             .reduce((acc, value) => [...acc, ...value]);
 
         const android = mapping(responseJson["android"]);
